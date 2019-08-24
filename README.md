@@ -1,8 +1,9 @@
 # Access modifiers for Python
 
 [![Build Status](https://travis-ci.org/fniessink/access-modifiers.svg?branch=master)](https://travis-ci.org/fniessink/access-modifiers)
+[![PyPI](https://img.shields.io/pypi/v/access-modifiers.svg)](https://pypi.python.org/pypi/access-modifiers)
 
-This package provides two access modifiers for Python: private methods and protected methods.
+This package provides two access modifiers for Python: private methods and protected methods. The goal is to be able to document methods as being private or protected and to provide basic guards against accidentally calling private and protected methods from outside the allowed scopes.
 
 ## Example usage
 
@@ -53,9 +54,11 @@ print(c.protected_method())  # Raises an exception
 
 ## Installation
 
-There is no release to the Python Package Index yet, so you'll have to install from source. Clone the repository and run `python setup.py install`.
+The package is available from the Python Package Index, install with `pip install access-modifiers`.
 
-## Tests and quality
+## Development 
+
+To clone the repository: `git clone git@github.com:fniessink/access-modifiers.git`.
 
 To install the development dependencies: `pip install -r requirements-dev.txt`.
 
