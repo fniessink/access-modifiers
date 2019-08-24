@@ -19,11 +19,15 @@ def privatemethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType
     def private_method_wrapper(*args, **kwargs) -> ReturnType:
         """Wrap the original method to make it private."""
         caller_frame = getframe(1)
+        caller_code = caller_frame.f_code
+        caller_name = caller_code.co_name
+        while caller_name.startswith("<"):  # Code is a <lambda>, <dictcomp>, <listcomp>, or other non-method code block
+            caller_frame = caller_frame.f_back
+            caller_code = caller_frame.f_code
+            caller_name = caller_code.co_name
         caller_instance = caller_frame.f_locals.get("self")
         if caller_instance is not args[0]:
             raise AccessException(f"Attempted call to private method {method} from another object")
-        caller_code = caller_frame.f_code
-        caller_name = caller_code.co_name
         # Look up the calling method to see if it's defined in the same class as the private method
         for caller_class in caller_instance.__class__.mro():
             caller = caller_class.__dict__.get(caller_name)

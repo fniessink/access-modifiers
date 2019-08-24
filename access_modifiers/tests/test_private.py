@@ -56,6 +56,50 @@ class PrivateMethodTest(unittest.TestCase):
 
         self.assertRaises(AccessException, Subclass().public_method)
 
+    def test_call_private_method_via_list_comprehension(self):
+        """Test that accessing a private method via a list comprehension in a public method works."""
+
+        class Class:
+            @privatemethod
+            def private_method(self):  # pylint: disable=no-self-use
+                return "Class.private_method"
+
+            def public_method(self):
+                return ["Class.public_method -> " + self.private_method() for _ in range(1)][0]
+
+        self.assertEqual("Class.public_method -> Class.private_method", Class().public_method())
+
+    def test_call_private_method_via_nested_lambda(self):
+        """Test that accessing a private method via a nested lambda in a public method works."""
+
+        class Class:
+            @privatemethod
+            def private_method(self):  # pylint: disable=no-self-use
+                return "Class.private_method"
+
+            def public_method(self):
+                inner_lambda_function = lambda: self.private_method()
+                outer_lambda_function = lambda: "Class.public_method -> " + inner_lambda_function()
+                return outer_lambda_function()
+
+        self.assertEqual("Class.public_method -> Class.private_method", Class().public_method())
+
+    def test_call_private_method_from_try_except_block(self):
+        """Test that accessing a private method from a try/except in a public method works."""
+
+        class Class:
+            @privatemethod
+            def private_method(self):  # pylint: disable=no-self-use
+                return "Class.private_method"
+
+            def public_method(self):
+                try:
+                    return "Class.public_method -> " + self.private_method()
+                except AttributeError:  # pragma: nocover
+                    pass
+
+        self.assertEqual("Class.public_method -> Class.private_method", Class().public_method())
+
     def test_override_private_method(self):
         """Test that an overridden private method can't call its super."""
 
