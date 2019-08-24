@@ -68,7 +68,7 @@ To run Pylint (which should score a 10) and Mypy (which shouldn't complain): `ci
 
 ## Implementation notes
 
-Both the `privatemethod` and the `protectedmethod` decorator work by looking at the code that is calling the decorator using the inspect module to decide whether it is allowed to call the method. Look at the tests to see which scenario's are currently covered.
+Both the `privatemethod` and the `protectedmethod` decorator work by looking at the code that is calling the decorator to decide whether it is allowed to call the method. Please look at the tests to see which scenario's are currently covered.
 
 Unsupported/untested are nested decorators, e.g.: 
 

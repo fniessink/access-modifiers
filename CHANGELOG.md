@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- The line "## <square-bracket>Unreleased</square-bracket>" is replaced by the ci/release.py script with the new release version and release date. -->
 
+## [Unreleased]
+
+### Fixed
+
+- Another small performance improvement by using `sys._getframe()` instead of the inspect module to get the caller's frame. Fixes [#2](https://github.com/fniessink/access-modifiers/issues/2).
+
 ## [0.1.2] - [2019-08-24]
 
 ### Fixed
