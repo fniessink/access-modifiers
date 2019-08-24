@@ -1,14 +1,13 @@
 language: python
+python:
+  - "3.6"
+  - "3.7"
+install: pip install -r requirements-dev.txt
+script:
+  - ci/unittest.sh
+  - ci/quality.sh
 jobs:
   include:
-    - stage: test
-      python:
-        - "3.6"
-        - "3.7"
-      install: pip install -r requirements-dev.txt
-      script:
-        - ci/unittest.sh
-        - ci/quality.sh
     - stage: deploy
       if: tag IS present
       python: 3.7
