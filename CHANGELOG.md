@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- The line "## <square-bracket>Unreleased</square-bracket>" is replaced by the ci/release.py script with the new release version and release date. -->
 
+## [Unreleased]
+
+### Fixed
+
+- Make the access modifiers work when called from a dict comprehension, list comprehension, lambda, or other code block that gets its own frame. Fixes [#5](https://github.com/fniessink/access-modifiers/issues/5).
+
 ## [0.1.3] - [2019-08-24]
 
 ### Fixed
