@@ -78,6 +78,7 @@ class PrivateMethodTest(unittest.TestCase):
                 return "Class.private_method"
 
             def public_method(self):
+                # pylint: disable=unnecessary-lambda
                 inner_lambda_function = lambda: self.private_method()
                 outer_lambda_function = lambda: "Class.public_method -> " + inner_lambda_function()
                 return outer_lambda_function()
