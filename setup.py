@@ -5,7 +5,7 @@ import setuptools
 
 setuptools.setup(
     name="access_modifiers",
-    version="0.1.2",
+    version="0.1.3",
     author="Frank Niessink",
     author_email="frank@niessink.com",
     description="Private and protected access modifiers for Python",
