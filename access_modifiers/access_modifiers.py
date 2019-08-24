@@ -14,7 +14,7 @@ ReturnType = TypeVar('ReturnType')
 
 def privatemethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType]:
     """Decorator that creates a private method."""
-    method_class_qualname = inspect.stack()[0].frame.f_back.f_locals.get("__qualname__")
+    method_class_qualname = inspect.stack()[1].frame.f_locals.get("__qualname__")
     @functools.wraps(method)
     def private_method_wrapper(*args, **kwargs) -> ReturnType:
         """Wrap the original method to make it private."""
