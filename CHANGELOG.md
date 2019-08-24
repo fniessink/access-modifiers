@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- The line "## <square-bracket>Unreleased</square-bracket>" is replaced by the ci/release.py script with the new release version and release date. -->
 
+## [Unreleased]
+
+### Fixed
+
+- Improved performance. Creating methods with an access modifier is now a factor 2-3 slower than without access modifier. Invoking methods with an access modifier is a factor 10-20 slower than methods without access modifier. Fixes [#2](https://github.com/fniessink/access-modifiers/issues/2).
+
+### Added
+
+- Added performance tests. Closes [#1](https://github.com/fniessink/access-modifiers/issues/1).
+
 ## [0.1.1] - [2019-08-24]
 
 ### Fixed

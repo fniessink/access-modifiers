@@ -1,7 +1,7 @@
 """Access modifiers for Python."""
 
 import functools
-import inspect
+from inspect import currentframe
 from typing import Callable, TypeVar
 
 
@@ -14,11 +14,11 @@ ReturnType = TypeVar('ReturnType')
 
 def privatemethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType]:
     """Decorator that creates a private method."""
-    method_class_qualname = inspect.stack()[1].frame.f_locals.get("__qualname__")
+    method_class_qualname = currentframe().f_back.f_locals.get("__qualname__")
     @functools.wraps(method)
     def private_method_wrapper(*args, **kwargs) -> ReturnType:
         """Wrap the original method to make it private."""
-        caller_frame = inspect.stack()[1].frame
+        caller_frame = currentframe().f_back
         caller_instance = caller_frame.f_locals.get("self")
         if caller_instance is not args[0]:
             raise AccessException(f"Attempted call to private method {method} from another object")
@@ -38,7 +38,7 @@ def protectedmethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnTy
     @functools.wraps(method)
     def protected_method_wrapper(*args, **kwargs) -> ReturnType:
         """Wrap the original method to make it protected."""
-        caller_frame = inspect.stack()[1].frame
+        caller_frame = currentframe().f_back
         caller_instance = caller_frame.f_locals.get("self")
         if caller_instance is not args[0]:
             raise AccessException(f"Attempted call to protected method {method} from another object")
