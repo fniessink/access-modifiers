@@ -1,22 +1,22 @@
 language: python
 python:
-  - "3.6"
-  - "3.7"
+- '3.6'
+- '3.7'
 install: pip install -r requirements-dev.txt
 script:
-  - ci/unittest.sh
-  - ci/quality.sh
+- ci/unittest.sh
+- ci/quality.sh
 jobs:
   include:
-    - stage: deploy
-      if: tag IS present
-      python: 3.7
-      script: python setup.py sdist bdist_wheel
-      deploy:
-        - provider: pypi
-          skip_cleanup: true
-          on:
-            tags: true
-          user: fniessink
-          password:
-            secure: FI9Q2kC5D6i2hjK7t0GTVzYIgmU7H9GoI0qqtzVtT6V7gfV74HtfPxuIbkF6HND09GY1moSF5I0vyR8Bm2nMxEs+9PflYtNUMeNlyrEEof/brbYIrKujPGr6wVdgT4iZlMAVeybRTWhPQpo5PFsGuGcQa5cZOzt4fPPy/KO8C0c=
+  - stage: deploy
+    if: tag IS present
+    python: 3.7
+    script: python setup.py sdist bdist_wheel
+    deploy:
+      on:
+        tags: true
+      distributions: sdist bdist_wheel
+      provider: pypi
+      user: fniessink
+      password:
+        secure: kqzCYGXEnYpnlEa+6aFy6HvGE17beEBbkBeaJJ5gaR8KGuv7Z1ecsjX8/E6BYkDUiq8YcpHtU6g5f9Iyy5CA4ZgOb+WoxqRxvyhyrKSYfCC0kLMC49ujInkczHNSJqKXQQXzbHjhkdQvGSJSyJqD/sje0h+HcEBAOp19k9LU8KclsRxIhaViGFOifTIH30NtzDch9wrJ3hIfrxKrJUkQPg8vTeUWJ/MhswdDXGgMIeqIhtLdTN6yaVoHQ20YjpRSoSkovxupfYvz5SdgHh6npehEZVcaLNIiYv0juHk4LNwSkt8iXRrI1ydhsCdGzrnWEftz7d/Z1zH82En5ibK0rRef3feA8hhHbZaa8iYkFhZUdGH4WahiR1iYoPjaIauHRNVdc0/FDYSzb+cLSMo9sdWxlXIvrMvSfNmv2LPHNjTYJsLmMuuA92X6+qtewB7ch6qWTBxcqU4zaESuXENApfdpy1ueQOgV8BlJkjjCglOXM80c7YLR4yC8R0K2L2jRaKwvs+zleCENDjIWn5mDLfIo6M/zLZILq+hpEo9VLihhdCNqqM/M/6cOOn1X1CnNNVa7CcJXKFlR6nhCBXWXYambh04tARyWHAPakWsD64Gy7ZDmKPWMYw1Eyl1OZmkocbHOGX4Dy+x4AYnpv9nsNDHS0SCIxmD2zkrhvAaV3sA=
