@@ -25,9 +25,9 @@ def privatemethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType
         caller_code = caller_frame.f_code
         caller_name = caller_code.co_name
         # Look up the calling method to see if it's defined in the same class as the private method
-        for cls in caller_instance.__class__.mro():
-            caller = cls.__dict__.get(caller_name)
-            if caller and caller.__code__ == caller_code and method_class_qualname == cls.__qualname__:
+        for caller_class in caller_instance.__class__.mro():
+            caller = caller_class.__dict__.get(caller_name)
+            if caller and caller.__code__ == caller_code and method_class_qualname == caller_class.__qualname__:
                 return method(*args, **kwargs)
         raise AccessException(f"Attempted call to private method {method} from a sub- or superclass method")
     return private_method_wrapper
