@@ -1,6 +1,6 @@
 # Access modifiers for Python
 
-[![Build Status](https://travis-ci.org/fniessink/access-modifiers.svg?branch=master)](https://travis-ci.org/fniessink/access-modifiers)
+[![Build Status](https://travis-ci.com/fniessink/access-modifiers.svg?branch=master)](https://travis-ci.com/fniessink/access-modifiers)
 [![PyPI](https://img.shields.io/pypi/v/access-modifiers.svg)](https://pypi.python.org/pypi/access-modifiers)
 
 This package provides two access modifiers for Python: private methods and protected methods. The goal is to be able to document methods as being private or protected and to provide basic guards against accidentally calling private and protected methods from outside the allowed scopes.
