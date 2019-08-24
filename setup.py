@@ -1,9 +1,9 @@
 """Setup access_modifiers."""
 
-from setuptools import setup
+import setuptools
 
 
-setup(
+setuptools.setup(
     name="access_modifiers",
     version="0.1.0",
     author="Frank Niessink",
@@ -11,9 +11,10 @@ setup(
     description="Private and protected access modifiers for Python",
     license="Apache 2.0",
     keywords="access modifier,protected,private,oop",
-    url="https://github.com/fniessink/access_modifiers",
-    packages=['access_modifiers'],
+    url="https://github.com/fniessink/access-modifiers",
+    packages=setuptools.find_packages(),
     long_description=open('README.md').read(),
+    long_description_content_type="text/markdown",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
