@@ -1,5 +1,7 @@
 # Access modifiers for Python
 
+[![Build Status](https://travis-ci.org/fniessink/access-modifiers.svg?branch=master)](https://travis-ci.org/fniessink/access-modifiers)
+
 This package provides two access modifiers for Python: private methods and protected methods.
 
 ## Example usage
