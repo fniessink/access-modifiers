@@ -5,7 +5,7 @@
 
 This package provides two access modifiers for Python: private methods and protected methods. The goal is to be able to document methods as being private or protected and to provide basic guards against accidentally calling private and protected methods from outside the allowed scopes.
 
-## Example usage
+## How to use
 
 Example usage of private methods:
 
@@ -15,7 +15,6 @@ from access_modifiers import privatemethod
 class Class:
     @privatemethod
     def private_method(self) -> str:
-        """A private method."""
         return "private method"
 
     def public_method(self) -> str:
@@ -34,7 +33,6 @@ from access_modifiers import protectedmethod
 class Class:
     @protectedmethod
     def protected_method(self) -> str:
-        """A protected method."""
         return "protected method"
 
     def public_method(self) -> str:
@@ -44,13 +42,33 @@ class Class:
 class Subclass(Class):
     @protectedmethod
     def protected_method(self) -> str:
-        """An overridden protected method."""
         return "overridden protected method calls " + super().protected_method()
 
 c = Subclass()
 print(c.public_method())  # Prints "public method calls overridden protected method calls protected method"
 print(c.protected_method())  # Raises an exception
 ```
+
+Private methods can be combined with static methods. Note that the order matters: staticmethod should be the outermost decorator.
+
+```python
+from access_modifiers import privatemethod
+
+class Class:
+    @staticmethod
+    @privatemethod
+    def static_private_method() -> str:
+        return "static private method"
+
+    def public_method(self) -> str:
+        return "public method calls " + self.static_private_method()
+
+c = Class()
+print(c.public_method())  # Prints "public method calls static private method"
+print(c.static_private_method())  # Raises an exception
+```
+
+Combining protected methods with static methods is not supported. Combining access modifiers with class methods is not supported (yet).
 
 ## Installation
 
@@ -68,14 +86,6 @@ To run Pylint (which should score a 10) and Mypy (which shouldn't complain): `ci
 
 ## Implementation notes
 
-Both the `privatemethod` and the `protectedmethod` decorator work by looking at the code that is calling the decorator to decide whether it is allowed to call the method. Please look at the tests to see which scenario's are currently covered.
+Both the `privatemethod` and the `protectedmethod` decorator work by looking at the code that is calling the decorator to decide whether it is allowed to call the method. To do so, the decorators use implementation details of CPython, like `sys._getframe()` and the names of code objects such as lambdas and modules. 
 
-Unsupported/untested are nested decorators, e.g.: 
-
-```python
-class Class:
-    @privatemethod
-    @staticmethod
-    def private_static_method():
-        return "a private static method"  # This is unsupported and untested!
-```
+The implementation is driven by (unit) tests and has 100% unit test statement and branch coverage. Please look at the tests to see which usage scenario's are currently covered.

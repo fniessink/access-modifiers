@@ -21,19 +21,18 @@ def privatemethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType
         caller_frame = getframe(1)
         caller_code = caller_frame.f_code
         caller_name = caller_code.co_name
-        while caller_name.startswith("<"):  # Code is a <lambda>, <dictcomp>, <listcomp>, or other non-method code block
+        while caller_name.startswith("<") and caller_frame.f_back:
+            # Code is a <lambda>, <dictcomp>, <listcomp>, or other non-method code block
             caller_frame = caller_frame.f_back
             caller_code = caller_frame.f_code
             caller_name = caller_code.co_name
         caller_instance = caller_frame.f_locals.get("self")
-        if caller_instance is not args[0]:
-            raise AccessException(f"Attempted call to private method {method} from another object")
         # Look up the calling method to see if it's defined in the same class as the private method
         for caller_class in caller_instance.__class__.mro():
             caller = caller_class.__dict__.get(caller_name)
             if caller and caller.__code__ == caller_code and method_class_qualname == caller_class.__qualname__:
                 return method(*args, **kwargs)
-        raise AccessException(f"Attempted call to private method {method} from a sub- or superclass method")
+        raise AccessException(f"Attempted call to private method {method} from outside its class")
     return private_method_wrapper
 
 
