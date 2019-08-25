@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- The line "## <square-bracket>Unreleased</square-bracket>" is replaced by the ci/release.py script with the new release version and release date. -->
 
+## [Unreleased]
+
+### Added
+
+- Allow for static private methods. Closes [#4](https://github.com/fniessink/access-modifiers/issues/4).
+
 ## [0.1.4] - [2019-08-25]
 
 ### Fixed
