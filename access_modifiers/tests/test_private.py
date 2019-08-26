@@ -5,10 +5,51 @@ import unittest
 from ..access_modifiers import AccessException, privatemethod, protectedmethod
 
 
-class PrivateMethodTestsMixin:
+class PrivateMethodTests(unittest.TestCase):
     """Shared unit tests for the private method and static private method access modifiers."""
 
     # pylint: disable=missing-docstring,too-few-public-methods
+
+    class Class:
+        @privatemethod
+        def private_method(self):  # pylint: disable=no-self-use
+            return "Class.private_method"
+
+        @privatemethod
+        def private_method_calling_private_method(self):
+            return "Class.private_method_calling_private_method -> " + self.private_method()
+
+        def public_method(self):
+            return "Class.public_method -> " + self.private_method()
+
+        def public_method_calling_private_method_via_private_method(self):
+            return "Class.public_method_calling_private_method_via_private_method -> " + \
+                   self.private_method_calling_private_method()
+
+        def public_method_using_list_comprehension(self):
+            return ["Class.public_method -> " + self.private_method() for _ in range(1)][0]
+
+        def public_method_using_nested_lambdas(self):
+            # pylint: disable=unnecessary-lambda
+            inner_lambda_function = lambda: self.private_method()
+            outer_lambda_function = lambda: "Class.public_method -> " + inner_lambda_function()
+            return outer_lambda_function()
+
+        def public_method_using_try_except(self):
+            try:
+                return "Class.public_method -> " + self.private_method()
+            except AttributeError:  # pragma: nocover
+                pass
+
+    class Subclass(Class):
+        @privatemethod
+        def private_method(self):
+            super().private_method()  # pragma: nocover
+
+    class SubclassOverridesWithProtectedMethod(Class):
+        @protectedmethod
+        def private_method(self):
+            return "Subclass.private_method -> " + super().private_method()  # pragma: nocover
 
     def test_call_private_method_directly(self):
         """Test the accessing a private method throws an exception."""
@@ -72,47 +113,15 @@ class PrivateMethodTestsMixin:
         self.assertRaises(AccessException, self.Subclass().public_method)
         self.assertRaises(AccessException, self.Subclass().private_method)
 
-
-class PrivateMethodTest(PrivateMethodTestsMixin, unittest.TestCase):
-    """Unit tests for the @privatemethod decorator."""
-
-    # pylint: disable=missing-docstring
-
-    class Class:
-        @privatemethod
-        def private_method(self):  # pylint: disable=no-self-use
-            return "Class.private_method"
-
-        def public_method(self):
-            return "Class.public_method -> " + self.private_method()
-
-        def public_method_using_list_comprehension(self):
-            return ["Class.public_method -> " + self.private_method() for _ in range(1)][0]
-
-        def public_method_using_nested_lambdas(self):
-            # pylint: disable=unnecessary-lambda
-            inner_lambda_function = lambda: self.private_method()
-            outer_lambda_function = lambda: "Class.public_method -> " + inner_lambda_function()
-            return outer_lambda_function()
-
-        def public_method_using_try_except(self):
-            try:
-                return "Class.public_method -> " + self.private_method()
-            except AttributeError:  # pragma: nocover
-                pass
-
-    class Subclass(Class):
-        @privatemethod
-        def private_method(self):
-            super().private_method()  # pragma: nocover
-
-    class SubclassOverridesWithProtectedMethod(Class):
-        @protectedmethod
-        def private_method(self):
-            return "Subclass.private_method -> " + super().private_method()  # pragma: nocover
+    def test_call_private_method_via_private_method(self):
+        """Test that a private method can be called via another private method."""
+        self.assertEqual(
+            "Class.public_method_calling_private_method_via_private_method -> "
+            "Class.private_method_calling_private_method -> Class.private_method",
+            self.Class().public_method_calling_private_method_via_private_method())
 
 
-class StaticPrivateMethodTest(PrivateMethodTestsMixin, unittest.TestCase):
+class StaticPrivateMethodTests(PrivateMethodTests):
     """Unit tests for the combined @staticmethod @privatemethod decorator."""
 
     # pylint: disable=missing-docstring
@@ -123,8 +132,16 @@ class StaticPrivateMethodTest(PrivateMethodTestsMixin, unittest.TestCase):
         def private_method():
             return "Class.private_method"
 
+        @privatemethod
+        def private_method_calling_private_method(self):
+            return "Class.private_method_calling_private_method -> " + self.private_method()
+
         def public_method(self):
             return "Class.public_method -> " + self.private_method()
+
+        def public_method_calling_private_method_via_private_method(self):
+            return "Class.public_method_calling_private_method_via_private_method -> " + \
+                   self.private_method_calling_private_method()
 
         def public_method_using_list_comprehension(self):
             return ["Class.public_method -> " + self.private_method() for _ in range(1)][0]
