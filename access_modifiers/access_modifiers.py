@@ -26,11 +26,13 @@ def privatemethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType
             caller_frame = caller_frame.f_back
             caller_code = caller_frame.f_code
             caller_name = caller_code.co_name
-        caller_instance = caller_frame.f_locals.get("self")
-        # Look up the calling method to see if it's defined in the same class as the private method
-        for caller_class in caller_instance.__class__.mro():
-            caller = caller_class.__dict__.get(caller_name)
-            if caller and caller.__code__ == caller_code and method_class_qualname == caller_class.__qualname__:
+        caller_class = caller_frame.f_locals.get("self").__class__
+        # Look up the caller method to see if it's defined in the same class as the wrapped method
+        classes = [cls for cls in caller_class.mro() if caller_name in cls.__dict__]
+        for cls in classes:
+            caller = cls.__dict__[caller_name]
+            caller = caller.__dict__["__wrapped__"] if "__wrapped__" in caller.__dict__ else caller
+            if caller.__code__ == caller_code and method_class_qualname == cls.__qualname__:
                 return method(*args, **kwargs)
         raise AccessException(f"Attempted call to private method {method} from outside its class")
     return private_method_wrapper
