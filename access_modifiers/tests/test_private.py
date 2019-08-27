@@ -2,7 +2,7 @@
 
 import unittest
 
-from ..access_modifiers import AccessException, privatemethod, protectedmethod
+from ..access_modifiers import AccessException, disable, enable, privatemethod, protectedmethod
 
 
 class PrivateMethodTests(unittest.TestCase):
@@ -52,16 +52,29 @@ class PrivateMethodTests(unittest.TestCase):
             return "Subclass.private_method -> " + super().private_method()  # pragma: nocover
 
     def test_call_private_method_directly(self):
-        """Test the accessing a private method throws an exception."""
+        """Test that accessing a private method throws an exception."""
         self.assertRaises(AccessException, self.Class().private_method)
-        self.assertRaises(AccessException, self.Class.private_method, self.Class())
+
+    def test_call_private_method_directly_without_access_checks(self):
+        """Test that accessing a private method without access checks works."""
+        try:
+            disable()
+
+            class Class:
+                @privatemethod
+                def private_method(self):  # pylint: disable=no-self-use
+                    return "Class.private_method"
+
+            self.assertEqual("Class.private_method", Class().private_method())
+        finally:
+            enable()
 
     def test_call_private_method_via_public_method(self):
-        """Test the accessing a private method via a public method is allowed."""
+        """Test that accessing a private method via a public method is allowed."""
         self.assertEqual("Class.public_method -> Class.private_method", self.Class().public_method())
 
     def test_call_private_method_via_public_method_from_subclass(self):
-        """Test the accessing a private method via an overridden public method is allowed."""
+        """Test that accessing a private method via an overridden public method is allowed."""
 
         class Subclass(self.Class):
             def public_method(self):
@@ -80,7 +93,7 @@ class PrivateMethodTests(unittest.TestCase):
         self.assertRaises(AccessException, Subclass().public_method)
 
     def test_call_private_method_via_public_method_in_subclass_using_super(self):
-        """Test the accessing a private method via a public method in a subclass is not allowed,
+        """Test that accessing a private method via a public method in a subclass is not allowed,
         not even when using super()."""
 
         class Subclass(self.Class):
@@ -168,3 +181,18 @@ class StaticPrivateMethodTests(PrivateMethodTests):
         @protectedmethod
         def private_method(self):
             return "Subclass.private_method -> " + super().private_method()  # pragma: nocover
+
+    def test_call_private_method_directly_without_access_checks(self):
+        """Test that accessing a private method without access checks works."""
+        try:
+            disable()
+
+            class Class:  # pylint: disable=too-few-public-methods
+                @staticmethod
+                @privatemethod
+                def private_method():
+                    return "Class.private_method"
+
+            self.assertEqual("Class.private_method", Class().private_method())
+        finally:
+            enable()

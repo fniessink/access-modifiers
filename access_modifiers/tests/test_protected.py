@@ -2,7 +2,7 @@
 
 import unittest
 
-from ..access_modifiers import AccessException, protectedmethod, privatemethod
+from ..access_modifiers import AccessException, enable, disable, protectedmethod, privatemethod
 
 
 class ProtectedMethodTest(unittest.TestCase):
@@ -21,14 +21,27 @@ class ProtectedMethodTest(unittest.TestCase):
     def test_protected_method(self):
         """Test that accessing a protected method throws an exception."""
         self.assertRaises(AccessException, self.Class().protected_method)
-        self.assertRaises(AccessException, self.Class.protected_method, self.Class())
+
+    def test_call_protected_method_directly_without_access_checks(self):
+        """Test that accessing a protected method without access checks works."""
+        try:
+            disable()
+
+            class Class:  # pylint: disable=too-few-public-methods
+                @protectedmethod
+                def protected_method(self):  # pylint: disable=no-self-use
+                    return "Class.protected_method"
+
+            self.assertEqual("Class.protected_method", Class().protected_method())
+        finally:
+            enable()
 
     def test_call_protected_method_via_public_method(self):
-        """Test the accessing a protected method via a public method is allowed."""
+        """Test that accessing a protected method via a public method is allowed."""
         self.assertEqual("Class.public_method -> Class.protected_method", self.Class().public_method())
 
     def test_call_protected_method_via_protected_method(self):
-        """Test the accessing a protected method via a another protected method is allowed."""
+        """Test that accessing a protected method via a another protected method is allowed."""
 
         class Subclass(self.Class):
             @protectedmethod
