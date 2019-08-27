@@ -12,8 +12,25 @@ class AccessException(Exception):
 ReturnType = TypeVar('ReturnType')
 
 
+_CHECK_ACCESS = True
+
+
+def disable() -> None:
+    """Disable all access checks. Needs to be invoked before the decorators are evaluated."""
+    global _CHECK_ACCESS  # pylint: disable=global-statement
+    _CHECK_ACCESS = False
+
+
+def enable() -> None:
+    """Enable all access checks. For testing purposes."""
+    global _CHECK_ACCESS  # pylint: disable=global-statement
+    _CHECK_ACCESS = True
+
+
 def privatemethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType]:
     """Decorator that creates a private method."""
+    if not _CHECK_ACCESS:
+        return method
     method_class_qualname = getframe(1).f_locals.get("__qualname__")
     @wraps(method)
     def private_method_wrapper(*args, **kwargs) -> ReturnType:
@@ -40,6 +57,8 @@ def privatemethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType
 
 def protectedmethod(method: Callable[..., ReturnType]) -> Callable[..., ReturnType]:
     """Decorator that creates a protected method."""
+    if not _CHECK_ACCESS:
+        return method
     @wraps(method)
     def protected_method_wrapper(*args, **kwargs) -> ReturnType:
         """Wrap the original method to make it protected."""

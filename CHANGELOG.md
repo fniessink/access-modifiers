@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- The line "## <square-bracket>Unreleased</square-bracket>" is replaced by the ci/release.py script with the new release version and release date. -->
 
+## [Unreleased]
+
+### Added
+
+- Added `access_modifiers.disable()` to disable access checks, e.g. in production. This method should be called before any access modifier decorators are compiled, so somewhere at the start of your program. Closes [#3](https://github.com/fniessink/access-modifiers/issues/3). 
+
 ## [0.2.1] - [2019-08-26]
 
 ### Fixed
