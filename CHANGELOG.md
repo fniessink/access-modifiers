@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- The line "## <square-bracket>Unreleased</square-bracket>" is replaced by the ci/release.py script with the new release version and release date. -->
 
+## [Unreleased]
+
+### Fixed
+
+- Make `disable()` available as `access_modifiers.disable()` instead of `access_modifiers.access_modifiers.disable()`. Fixes [#14](https://github.com/fniessink/access-modifiers/issues/14).
+
 ## [0.3.0] - [2019-08-27]
 
 ### Added
