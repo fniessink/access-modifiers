@@ -1,3 +1,3 @@
-"""Access modifiers package."""
+"""Access modifiers package externally available names."""
 
-from .access_modifiers import privatemethod, protectedmethod, AccessException
+from .access_modifiers import disable, privatemethod, protectedmethod, AccessException
