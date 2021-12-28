@@ -1,6 +1,6 @@
 bump2version==0.5.10
 coverage==4.5.4
-lxml==4.6.3
+lxml==4.6.5
 mypy==0.720
 pip==21.1
 pylint==2.3.1
